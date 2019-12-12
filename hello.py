@@ -1,6 +1,7 @@
 # 요청이 들어오면 return해준다
 # 플라스크 모듈 안에서 import 3개 불러오기
 from flask import Flask, escape, request, render_template
+import random
 # 플라스크를 app이라는 변수에 저장
 app = Flask(__name__)
 # 밑에 있는 함수가 시작되기 전에 시작되는 부분
@@ -55,6 +56,26 @@ def cube1(num):
     num = num
     cube_num = num ** 3
     return render_template('cube1.html', num = num, cube_num = cube_num)
+
+# random으로 lunch menu choice하기
+@app.route('/lunch')
+def lunch():
+    list_menu = ['짜장면','짬뽕','탕수육']
+
+# random.choice
+# random library import해주기
+
+# {중괄호 dictionary 형태로 가능}
+# menus = {
+#   '짜장': '이미지 주소',
+#   '짜장': '이미지 주소',
+#   '짜장': '이미지 주소'}
+# menu_list = menus.keys()
+# print(menu_list)
+
+# choice 안에 list는 string 형태 아님
+    pick = random.choice(list_menu)
+    return render_template('lunch.html', pick = pick)
 
 if __name__ == '__main__':
     app.run(debug=True)
