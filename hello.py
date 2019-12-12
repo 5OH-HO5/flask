@@ -77,5 +77,10 @@ def lunch():
     pick = random.choice(list_menu)
     return render_template('lunch.html', pick = pick)
 
+@app.route('/movies')
+def movies():
+    movies = ['겨울왕국2','쥬만지','해리포터']
+    return render_template('movies.html', movies = movies)
+
 if __name__ == '__main__':
     app.run(debug=True)
