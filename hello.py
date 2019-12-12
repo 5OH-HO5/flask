@@ -2,6 +2,8 @@
 # 플라스크 모듈 안에서 import 3개 불러오기
 from flask import Flask, escape, request, render_template
 import random
+from bs4 import BeautifulSoup
+import requests
 # 플라스크를 app이라는 변수에 저장
 app = Flask(__name__)
 # 밑에 있는 함수가 시작되기 전에 시작되는 부분
@@ -101,6 +103,25 @@ def naver():
 @app.route('/google')
 def google():
     return render_template('google.html')
-    
+
+@app.route('/summoner')
+def summoner():
+    return render_template('summoner.html')
+
+@app.route('/opgg')
+def opgg():
+    # args.get('asdf') = keyerror 에러를 반영
+    # args.get['asdf'] = None 값을 반영
+    # args.get('asdf', '잘못된 접근입니다.') = 잘못된 정보면 잘못된 접근이라는 디폴트값 반영가능
+    username = request.args.get('username')
+    opgg_url = f"https://www.op.gg/summoner/userName={username}"
+
+    response = requests.get(opgg_url).text
+    soup = BeautifulSoup(response, 'html.parser')
+    tier = soup.select_one('#SummonerLayoutContent > div.tabItem.Content.SummonerLayoutContent.summonerLayout-summary > div.SideContent > div.TierBox.Box > div > div.TierRankInfo > div.TierRank').text
+    win = soup.select_one('#SummonerLayoutContent > div.tabItem.Content.SummonerLayoutContent.summonerLayout-summary > div.SideContent > div.TierBox.Box > div > div.TierRankInfo > div.TierInfo > span.WinLose > span.wins').string
+    return render_template('opgg.html', username = username, opgg_url = opgg_url, tier = tier, win = win)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
