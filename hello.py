@@ -119,8 +119,30 @@ def opgg():
     response = requests.get(opgg_url).text
     soup = BeautifulSoup(response, 'html.parser')
     tier = soup.select_one('#SummonerLayoutContent > div.tabItem.Content.SummonerLayoutContent.summonerLayout-summary > div.SideContent > div.TierBox.Box > div > div.TierRankInfo > div.TierRank').text
-    win = soup.select_one('#SummonerLayoutContent > div.tabItem.Content.SummonerLayoutContent.summonerLayout-summary > div.SideContent > div.TierBox.Box > div > div.TierRankInfo > div.TierInfo > span.WinLose > span.wins').string
-    return render_template('opgg.html', username = username, opgg_url = opgg_url, tier = tier, win = win)
+    win = soup.select_one('#SummonerLayoutContent > div.tabItem.Content.SummonerLayoutContent.summonerLayout-summary > div.SideContent > div.TierBox.Box > div > div.TierRankInfo > div.TierInfo > span.WinLose > span.wins')
+    return render_template('opgg.html', username = username, opgg_url = opgg_url, tier = tier, win = win.text.replace('W',''))
+
+@app.route('/real_time_search')
+def real_time_search():
+    url = 'https://www.naver.com/'
+    response = requests.get(url).text
+    soup = BeautifulSoup(response, 'html.parser')
+    rank_list = []
+    for i in range(1, 21):
+        rank = soup.select_one(f'#PM_ID_ct > div.header > div.section_navbar > div.area_hotkeyword.PM_CL_realtimeKeyword_base > div.ah_roll.PM_CL_realtimeKeyword_rolling_base > div > ul > li:nth-child({i}) > a > span.ah_k').text
+        rank_list.append(rank)
+    random.shuffle(rank_list)
+    return render_template('real_time_search.html', rank_list = rank_list)
+
+
+@app.route('/result')
+def result():
+    popkeyword = request.args.get('popkeyword')
+    url = 'https://www.naver.com/'
+    response = requests.get(url).text
+    soup = BeautifulSoup(response, 'html.parser')
+    rank_a = soup.select_one('#PM_ID_ct > div.header > div.section_navbar > div.area_hotkeyword.PM_CL_realtimeKeyword_base > div.ah_roll.PM_CL_realtimeKeyword_rolling_base > div > ul > li:nth-child(1) > a > span.ah_k').text
+    return render_template('result.html', popkeyword = popkeyword, rank_a = rank_a)
 
 
 if __name__ == '__main__':
