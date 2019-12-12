@@ -35,5 +35,26 @@ def variable():
     name = '오민재'
     return render_template('variable.html', html_name = name)
 
+# 동적 routing
+@app.route('/greeting/<string:name>/')
+def greeting(name):
+    def_name = name
+    return render_template('greeting.html', html_name = def_name)
+
+# /cube/3
+# 3의 3제곱은 27입니다.
+@app.route('/cube/<int:number>/')
+def cube(number):
+    def_number = number
+    return render_template('cube.html', html_number = def_number)
+    # cube.html을 리턴해주는게 render_template의 역할
+    # ** 지수를 표현 // 3의 4제곱 = 3 ** 4
+
+@app.route('/cube1/<int:num>/')
+def cube1(num):
+    num = num
+    cube_num = num ** 3
+    return render_template('cube1.html', num = num, cube_num = cube_num)
+
 if __name__ == '__main__':
     app.run(debug=True)
