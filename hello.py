@@ -82,5 +82,17 @@ def movies():
     movies = ['겨울왕국2','쥬만지','해리포터']
     return render_template('movies.html', movies = movies)
 
+@app.route('/ping')
+def ping():
+    return render_template('ping.html')
+
+@app.route('/pong', methods = ['GET','POST'])
+def pong():
+    # request.args => GET 형식으로 데이터가 들어온다면 사용
+    # request.form => POST 형식으로 데이터가 들어온다면 사용
+    # print(request.form.get('keyword'))
+    keyword = request.form.get('keyword')
+    return render_template('pong.html', keyword = keyword)
+
 if __name__ == '__main__':
     app.run(debug=True)
