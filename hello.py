@@ -21,13 +21,19 @@ def hi():
 def oh():
     return 'ohminjae'
 
-@app.route(/html_tag)
+@app.route('/html_tag')
 def html_tag():
     return '<h1>안녕하세요</h1>'
 
-@app.route(html_file)
+@app.route('/html_file')
 def html_file():
     return render_template('index.html')
+
+# render 만들다/되게 하다/세우다
+@app.route('/variable')
+def variable():
+    name = '오민재'
+    return render_template('variable.html', html_name = name)
 
 if __name__ == '__main__':
     app.run(debug=True)
